@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    image: devops-app:latest
+    image: dev-app:latest
     container_name: guvi-container
     ports:
       - "80:80"

@@ -1,3 +1,3 @@
 #!/bin/bash
-docker build -t devops-app .
+sudo docker build -t dev-app .
 
