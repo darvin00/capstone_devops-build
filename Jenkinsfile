@@ -35,11 +35,8 @@ pipeline {
             }
         }
         stage('Deploy Application') {
-            when {
-                branch 'main'
-            }
             steps {
-                echo "Deploying application from master to production environment..."
+                echo "Deploying application from main to production environment..."
                 // Add your deployment logic here
             }
         }
