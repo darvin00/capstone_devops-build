@@ -41,6 +41,7 @@ pipeline {
             }
         }
     }
+<<<<<<< HEAD
     post {
         always {
             echo "Cleaning up Docker images..."
@@ -48,4 +49,13 @@ pipeline {
             sh "docker rmi ${env.BRANCH_NAME == 'main' ? prodRegistry : devRegistry}:latest"
         }
     }
+=======
+    //  post {
+    //      always {
+    //         echo "Cleaning up Docker images..."
+    //         sh "docker rmi ${env.BRANCH_NAME == 'main' ? prodRegistry : devRegistry}:${env.BUILD_NUMBER}"
+    //         sh "docker rmi ${env.BRANCH_NAME == 'main' ? prodRegistry : devRegistry}:latest"
+    //     }
+    // }
+>>>>>>> dev
 }

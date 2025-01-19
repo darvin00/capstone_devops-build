@@ -12,7 +12,11 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+<<<<<<< HEAD
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url:'https://github.com/darvin00/capstone_devops-build.git']])
+=======
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/darvin00/capstone_devops-build.git']])
+>>>>>>> dev
             }
         }
         stage('Build Docker Image') {
