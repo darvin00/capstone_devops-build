@@ -10,29 +10,16 @@ pipeline {
         githubPush()
     }
     stages {
-       stage('Checkout') {
-     steps {
-        script {
-              // Dynamically determine the branch to check out
-              def branchToBuild = env.BRANCH_NAME ?: 'dev' // Default to 'dev' if BRANCH_NAME is not set
-              echo "Checking out branch: ${branchToBuild}"
-              // Check out the specified branch
-              checkout scmGit(
-                branches: [[name: "*/${branchToBuild}"]], 
-                extensions: [], 
-                userRemoteConfigs: [[url: 'https://github.com/darvin00/capstone_devops-build.git']]
-                )
+        stage('Checkout') {
+            steps {
+                checkout scmGit(branches: [[name: '*/dev']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/darvin00/capstone_devops-build.git']])
             }
-       }
-    }
+        }
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Dynamically decide the registry based on the branch
-                    def registry = (env.BRANCH_NAME == 'main') ? prodRegistry : devRegistry
-                    
                     // Build the Docker image
-                    dockerImage = docker.build("${registry}:${env.BUILD_NUMBER}")
+                    dockerImage = docker.build("${env.BRANCH_NAME == 'main' ? prodRegistry : devRegistry}:${env.BUILD_NUMBER}")
                 }
             }
         }
@@ -40,7 +27,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('', registryCredential) {
-                        // Push to the correct registry (dev or prod)
+                        // Push to the appropriate registry (dev or prod)
                         dockerImage.push("${env.BUILD_NUMBER}")
                         dockerImage.push('latest')
                     }
@@ -48,23 +35,17 @@ pipeline {
             }
         }
         stage('Deploy Application') {
-            when {
-                branch 'main' // Only deploy when on the main branch
-            }
             steps {
                 echo "Deploying application from main to production environment..."
-                // Add deployment logic for production here
+                // Add your deployment logic here
             }
         }
     }
-    post {
-        always {
-            script {
-                echo "Cleaning up Docker images..."
-                def registry = (env.BRANCH_NAME == 'main') ? prodRegistry : devRegistry
-                sh "docker rmi ${registry}:${env.BUILD_NUMBER}"
-                sh "docker rmi ${registry}:latest"
-            }
+     post {
+         always {
+            echo "Cleaning up Docker images..."
+            sh "docker rmi ${env.BRANCH_NAME == 'main' ? prodRegistry : devRegistry}:${env.BUILD_NUMBER}"
+            sh "docker rmi ${env.BRANCH_NAME == 'main' ? prodRegistry : devRegistry}:latest"
         }
     }
 }
