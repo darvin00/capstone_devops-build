@@ -44,7 +44,7 @@ pipeline {
             }
         }
     }
-    post {
+    #post {
         always {
             echo "Cleaning up Docker images..."
             sh "docker rmi ${env.BRANCH_NAME == 'master' ? prodRegistry : devRegistry}:${env.BUILD_NUMBER}"
