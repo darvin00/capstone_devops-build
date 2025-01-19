@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image
-                    dockerImage = docker.build("${env.BRANCH_NAME == 'master' ? prodRegistry : devRegistry}:${env.BUILD_NUMBER}")
+                    dockerImage = docker.build("${env.BRANCH_NAME == 'main' ? prodRegistry : devRegistry}:${env.BUILD_NUMBER}")
                 }
             }
         }
@@ -35,11 +35,8 @@ pipeline {
             }
         }
         stage('Deploy Application') {
-            when {
-                branch 'master'
-            }
             steps {
-                echo "Deploying application from master to production environment..."
+                echo "Deploying application from main to production environment..."
                 // Add your deployment logic here
             }
         }
@@ -47,8 +44,8 @@ pipeline {
     post {
         always {
             echo "Cleaning up Docker images..."
-            sh "docker rmi ${env.BRANCH_NAME == 'master' ? prodRegistry : devRegistry}:${env.BUILD_NUMBER}"
-            sh "docker rmi ${env.BRANCH_NAME == 'master' ? prodRegistry : devRegistry}:latest"
+            sh "docker rmi ${env.BRANCH_NAME == 'main' ? prodRegistry : devRegistry}:${env.BUILD_NUMBER}"
+            sh "docker rmi ${env.BRANCH_NAME == 'main' ? prodRegistry : devRegistry}:latest"
         }
     }
 }
