@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image
-                    dockerImage = docker.build("${env.BRANCH_NAME == 'main' ? devRegistry : prodRegistry}:${env.BUILD_NUMBER}")
+                    dockerImage = docker.build("${env.BRANCH_NAME == 'main' ? prodRegistry : devRegistry}:${env.BUILD_NUMBER}")
                 }
             }
         }
